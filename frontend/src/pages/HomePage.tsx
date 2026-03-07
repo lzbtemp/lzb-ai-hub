@@ -39,7 +39,7 @@ export default function HomePage() {
       <div className="bg-[#1B3A6B] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <img
-            src="/lazboy-logo.svg"
+            src="/lazboy-logo.png"
             alt="La-Z-Boy"
             className="h-10 mx-auto mb-6 brightness-0 invert"
           />

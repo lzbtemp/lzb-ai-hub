@@ -17,7 +17,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2.5">
             <img
-              src="/lazboy-logo.svg"
+              src="/lazboy-logo.png"
               alt="La-Z-Boy"
               className="h-7"
             />
