@@ -38,8 +38,13 @@ export default function HomePage() {
       {/* Hero — Comfort Blue background */}
       <div className="bg-[#1B3A6B] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+          <img
+            src="/lazboy-logo.svg"
+            alt="La-Z-Boy"
+            className="h-10 mx-auto mb-6 brightness-0 invert"
+          />
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-            La-Z-Boy Skills Repository
+            Skills Repository
           </h1>
           <p className="text-lg text-white/70 max-w-2xl mx-auto mb-2">
             Discover, share, and install reusable AI agent skills across La-Z-Boy teams.
