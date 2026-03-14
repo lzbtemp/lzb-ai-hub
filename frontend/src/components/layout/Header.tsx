@@ -1,41 +1,36 @@
-import { Link, useLocation } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import GradientMenu from '@/components/ui/gradient-menu';
+import { TextRoll } from '@/components/ui/text-roll';
 
 export default function Header() {
-  const location = useLocation();
-
-  const linkClass = (path: string) =>
-    `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-      location.pathname === path
-        ? 'bg-[#1B3A6B]/10 text-[#1B3A6B]'
-        : 'text-[#2C2C2C]/60 hover:text-[#2C2C2C] hover:bg-[#1B3A6B]/5'
-    }`;
+  const navigate = useNavigate();
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200/30 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-3">
+        <div className="flex items-center justify-between h-20">
+          <Link to="/" className="flex items-center gap-3 group">
             <img
               src="/lazboy-logo.png"
               alt="La-Z-Boy"
               className="h-10"
             />
-            <span className="text-sm font-semibold text-[#1B3A6B]/60 border-l border-[#1B3A6B]/20 pl-3">
-              Skills
+            <span className="border-l border-[#1B3A6B]/15 pl-3">
+              <TextRoll
+                className="text-lg font-bold text-[#1B3A6B] tracking-tight"
+                duration={0.6}
+                getEnterDelay={(i) => i * 0.05}
+                getExitDelay={(i) => i * 0.05 + 0.12}
+                loop
+                loopDelay={4}
+              >
+                Agent Skills Hub
+              </TextRoll>
             </span>
           </Link>
 
-          <nav className="flex items-center gap-1">
-            <Link to="/" className={linkClass('/')}>Home</Link>
-            <Link to="/browse" className={linkClass('/browse')}>Browse</Link>
-            <Link
-              to="/submit"
-              className="ml-2 inline-flex items-center gap-1 px-4 py-2 bg-[#C0392B] text-white text-sm font-medium rounded-lg hover:opacity-85 transition-all"
-            >
-              <Plus className="w-4 h-4" />
-              Submit Skill
-            </Link>
+          <nav className="flex items-center">
+            <GradientMenu onNavigate={(href) => navigate(href)} />
           </nav>
         </div>
       </div>

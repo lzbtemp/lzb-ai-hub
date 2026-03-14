@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import api from '../api/client';
+import { fetchAllSkills } from '../api/github';
 import type { PaginatedResponse, SkillListItem } from '../types';
 
 interface UseSkillsParams {
@@ -13,12 +13,28 @@ interface UseSkillsParams {
 export function useSkills({ page = 1, perPage = 20, category, tag, sort = 'newest' }: UseSkillsParams = {}) {
   return useQuery({
     queryKey: ['skills', { page, perPage, category, tag, sort }],
-    queryFn: async () => {
-      const params: Record<string, string | number> = { page, per_page: perPage, sort };
-      if (category) params.category = category;
-      if (tag) params.tag = tag;
-      const { data } = await api.get<PaginatedResponse<SkillListItem>>('/skills', { params });
-      return data;
+    queryFn: async (): Promise<PaginatedResponse<SkillListItem>> => {
+      let skills = await fetchAllSkills();
+
+      if (category) {
+        skills = skills.filter(s => s.category.slug === category);
+      }
+      if (tag) {
+        skills = skills.filter(s => s.tags.some(t => t.slug === tag));
+      }
+
+      if (sort === 'popular') {
+        skills.sort((a, b) => b.install_count - a.install_count);
+      } else if (sort === 'name') {
+        skills.sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      const total = skills.length;
+      const totalPages = Math.max(1, Math.ceil(total / perPage));
+      const start = (page - 1) * perPage;
+      const data = skills.slice(start, start + perPage);
+
+      return { data, page, per_page: perPage, total, total_pages: totalPages };
     },
   });
 }

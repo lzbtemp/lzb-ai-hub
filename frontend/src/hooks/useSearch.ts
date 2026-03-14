@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import api from '../api/client';
+import { searchSkills } from '../api/github';
 import type { PaginatedResponse, SkillListItem } from '../types';
 
 interface UseSearchParams {
@@ -12,11 +12,19 @@ interface UseSearchParams {
 export function useSearch({ query, category, page = 1, perPage = 20 }: UseSearchParams) {
   return useQuery({
     queryKey: ['search', { query, category, page, perPage }],
-    queryFn: async () => {
-      const params: Record<string, string | number> = { q: query, page, per_page: perPage };
-      if (category) params.category = category;
-      const { data } = await api.get<PaginatedResponse<SkillListItem>>('/search', { params });
-      return data;
+    queryFn: async (): Promise<PaginatedResponse<SkillListItem>> => {
+      let results = await searchSkills(query);
+
+      if (category) {
+        results = results.filter(s => s.category.slug === category);
+      }
+
+      const total = results.length;
+      const totalPages = Math.max(1, Math.ceil(total / perPage));
+      const start = (page - 1) * perPage;
+      const data = results.slice(start, start + perPage);
+
+      return { data, page, per_page: perPage, total, total_pages: totalPages };
     },
     enabled: query.length > 0,
   });

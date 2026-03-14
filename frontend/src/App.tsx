@@ -5,7 +5,6 @@ import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
 import BrowsePage from './pages/BrowsePage';
 import SkillDetailPage from './pages/SkillDetailPage';
-import SubmitSkillPage from './pages/SubmitSkillPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const queryClient = new QueryClient({
@@ -28,7 +27,6 @@ export default function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/browse" element={<BrowsePage />} />
               <Route path="/skills/:slug" element={<SkillDetailPage />} />
-              <Route path="/submit" element={<SubmitSkillPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>

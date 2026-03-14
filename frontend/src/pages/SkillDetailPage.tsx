@@ -1,8 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Download, Tag as TagIcon, User } from 'lucide-react';
-import api from '../api/client';
-import type { Skill } from '../types';
+import { Tag as TagIcon, User, ChevronRight, Package } from 'lucide-react';
+import { fetchSkillBySlug } from '../api/github';
 import SkillContentViewer from '../components/skills/SkillContentViewer';
 import InstallInstructions from '../components/skills/InstallInstructions';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -13,8 +12,7 @@ export default function SkillDetailPage() {
   const { data: skill, isLoading, error } = useQuery({
     queryKey: ['skill', slug],
     queryFn: async () => {
-      const { data } = await api.get<Skill>(`/skills/${slug}`);
-      return data;
+      return await fetchSkillBySlug(slug!);
     },
     enabled: !!slug,
   });
@@ -23,7 +21,7 @@ export default function SkillDetailPage() {
 
   if (error || !skill) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-12 text-center">
+      <div className="max-w-4xl mx-auto px-4 py-12 text-center animate-fade-in">
         <p className="text-[#C0392B] text-lg">Skill not found</p>
         <Link to="/browse" className="text-[#1B3A6B] hover:underline mt-4 inline-block">
           Back to Browse
@@ -33,63 +31,85 @@ export default function SkillDetailPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Link to="/browse" className="inline-flex items-center gap-1 text-sm text-[#2C2C2C]/50 hover:text-[#1B3A6B] mb-6">
-        <ArrowLeft className="w-4 h-4" />
-        Back to Browse
-      </Link>
-
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Main content */}
-        <div className="flex-1 min-w-0">
-          <div className="mb-6">
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl font-bold text-[#1B3A6B]">{skill.name}</h1>
-              <span className="text-sm text-[#2C2C2C]/40">v{skill.version}</span>
-            </div>
-            <p className="text-[#2C2C2C]/70 mb-3">{skill.description}</p>
-            <div className="flex items-center gap-4 text-sm text-[#2C2C2C]/50">
-              <span className="inline-flex items-center gap-1">
-                <User className="w-4 h-4" />
-                {skill.author.display_name || skill.author.username}
-              </span>
-              <span className="inline-flex items-center gap-1">
-                <Download className="w-4 h-4" />
-                {skill.install_count} installs
-              </span>
-              <Link
-                to={`/browse?category=${skill.category.slug}`}
-                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#1B3A6B]/10 text-[#1B3A6B] hover:bg-[#1B3A6B]/15"
-              >
-                {skill.category.name}
-              </Link>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <SkillContentViewer content={skill.content} />
-          </div>
-
-          {skill.tags.length > 0 && (
-            <div className="mt-4 flex items-center gap-2 flex-wrap">
-              <TagIcon className="w-4 h-4 text-[#2C2C2C]/40" />
-              {skill.tags.map((tag) => (
-                <Link
-                  key={tag.id}
-                  to={`/browse?tag=${tag.slug}`}
-                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#8FAF8A]/20 text-[#2C2C2C]/70 hover:bg-[#8FAF8A]/30"
-                >
-                  {tag.name}
-                </Link>
-              ))}
-            </div>
-          )}
+    <div className="animate-fade-in">
+      {/* Gradient hero header */}
+      <div className="relative bg-gradient-to-br from-[#1B3A6B] via-[#152f58] to-[#1B3A6B]/90 overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute w-48 h-48 rounded-full border border-white/[0.04]" style={{ top: '-10%', right: '10%' }} />
+          <div className="absolute w-32 h-32 rounded-full bg-[#8FAF8A]/[0.04]" style={{ bottom: '10%', left: '5%' }} />
         </div>
+        <div className="absolute inset-0 noise-overlay" />
 
-        {/* Sidebar */}
-        <aside className="w-full lg:w-72 shrink-0">
-          <InstallInstructions slug={skill.slug} content={skill.content} />
-        </aside>
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-1.5 text-sm text-white/35 mb-8">
+            <Link to="/" className="hover:text-white/70 transition-colors">Home</Link>
+            <ChevronRight className="w-3.5 h-3.5" />
+            <Link to="/browse" className="hover:text-white/70 transition-colors">Browse</Link>
+            <ChevronRight className="w-3.5 h-3.5" />
+            <span className="text-white/60 truncate">{skill.name}</span>
+          </nav>
+
+          <div className="flex items-start gap-5">
+            <div className="w-14 h-14 rounded-2xl bg-white/[0.08] backdrop-blur-sm border border-white/[0.1] flex items-center justify-center shrink-0">
+              <Package className="w-7 h-7 text-white/70" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl font-bold text-white tracking-tight">{skill.name}</h1>
+                <span className="text-xs text-white/30 bg-white/[0.08] px-2.5 py-0.5 rounded-full backdrop-blur-sm">v{skill.version}</span>
+              </div>
+              <p className="text-white/50 text-lg font-light">{skill.description}</p>
+              <div className="flex items-center gap-5 text-sm text-white/40 mt-4">
+                <span className="inline-flex items-center gap-1.5">
+                  <User className="w-4 h-4" />
+                  {skill.author.display_name || skill.author.username}
+                </span>
+                <Link
+                  to={`/browse?category=${skill.category.slug}`}
+                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/[0.08] text-white/60 hover:bg-white/[0.12] transition-colors backdrop-blur-sm"
+                >
+                  {skill.category.name}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Main content */}
+          <div className="flex-1 min-w-0">
+            <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
+              <SkillContentViewer content={skill.content} />
+            </div>
+
+            {/* Tags */}
+            {skill.tags.length > 0 && (
+              <div className="mt-5 flex items-center gap-2 flex-wrap">
+                <TagIcon className="w-4 h-4 text-[#2C2C2C]/20" />
+                {skill.tags.map((tag) => (
+                  <Link
+                    key={tag.id}
+                    to={`/browse?tag=${tag.slug}`}
+                    className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-white text-[#2C2C2C]/55 border border-gray-100 hover:border-[#8FAF8A]/40 hover:bg-[#8FAF8A]/10 hover:scale-105 transition-all duration-200"
+                  >
+                    {tag.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <aside className="w-full lg:w-72 shrink-0">
+            <div className="sticky top-24">
+              <InstallInstructions slug={skill.slug} content={skill.content} />
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );

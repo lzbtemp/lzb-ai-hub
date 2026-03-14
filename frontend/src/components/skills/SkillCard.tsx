@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Download } from 'lucide-react';
+import { Download, ArrowRight } from 'lucide-react';
 import type { SkillListItem } from '../../types';
 
 interface Props {
@@ -10,35 +10,43 @@ export default function SkillCard({ skill }: Props) {
   return (
     <Link
       to={`/skills/${skill.slug}`}
-      className="block bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-[#1B3A6B]/30 transition-all"
+      className="group block bg-white rounded-2xl border border-gray-100 overflow-hidden card-hover hover:border-[#1B3A6B]/15"
     >
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <h3 className="text-lg font-semibold text-[#2C2C2C] line-clamp-1">{skill.name}</h3>
-        <span className="inline-flex items-center gap-1 text-xs text-[#2C2C2C]/50 shrink-0">
-          <Download className="w-3 h-3" />
-          {skill.install_count}
-        </span>
-      </div>
+      {/* Accent stripe */}
+      <div className="h-0.5 bg-gradient-to-r from-[#1B3A6B] via-[#1B3A6B]/60 to-transparent" />
 
-      <p className="text-sm text-[#2C2C2C]/60 line-clamp-2 mb-3">{skill.description}</p>
-
-      <div className="flex items-center gap-2 flex-wrap">
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#1B3A6B]/10 text-[#1B3A6B]">
-          {skill.category.name}
-        </span>
-        {skill.tags.slice(0, 3).map((tag) => (
-          <span
-            key={tag.id}
-            className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#8FAF8A]/20 text-[#2C2C2C]/70"
-          >
-            {tag.name}
+      <div className="p-6">
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <h3 className="text-lg font-bold text-[#2C2C2C] line-clamp-1 group-hover:text-[#1B3A6B] transition-colors tracking-tight">{skill.name}</h3>
+          <span className="inline-flex items-center gap-1 text-xs text-[#2C2C2C]/35 shrink-0 bg-[#FAF8F5] px-2 py-0.5 rounded-full">
+            <Download className="w-3 h-3" />
+            {skill.install_count}
           </span>
-        ))}
-      </div>
+        </div>
 
-      <div className="mt-3 flex items-center justify-between text-xs text-[#2C2C2C]/40">
-        <span>by {skill.author.display_name || skill.author.username}</span>
-        <span>v{skill.version}</span>
+        <p className="text-sm text-[#2C2C2C]/55 line-clamp-2 mb-5 leading-relaxed">{skill.description}</p>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r from-[#1B3A6B]/12 to-[#1B3A6B]/8 text-[#1B3A6B]">
+            {skill.category.name}
+          </span>
+          {skill.tags.slice(0, 2).map((tag) => (
+            <span
+              key={tag.id}
+              className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-[#2C2C2C]/50 bg-[#FAF8F5] border border-gray-100/80"
+            >
+              {tag.name}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-5 pt-4 border-t border-gray-50 flex items-center justify-between text-xs text-[#2C2C2C]/35">
+          <span className="font-medium">{skill.author.display_name || skill.author.username}</span>
+          <div className="flex items-center gap-2">
+            <span>v{skill.version}</span>
+            <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-[#1B3A6B]" />
+          </div>
+        </div>
       </div>
     </Link>
   );
