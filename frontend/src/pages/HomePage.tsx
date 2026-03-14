@@ -12,19 +12,25 @@ import { Typewriter } from '@/components/ui/typewriter-text';
 import { TextRotate } from '@/components/ui/text-rotate';
 
 const ROLES = [
-  { label: 'FRONTEND', icon: Monitor, query: 'frontend' },
-  { label: 'BACKEND', icon: Server, query: 'backend' },
-  { label: 'FULL STACK', icon: Layers, query: 'full stack' },
-  { label: 'DEVOPS', icon: Settings, query: 'devops' },
-  { label: 'DATA/AI', icon: Brain, query: 'data ai' },
-  { label: 'DESIGNER', icon: Palette, query: 'design' },
-  { label: 'QA/TESTING', icon: TestTube2, query: 'testing' },
-  { label: 'SECURITY', icon: ShieldCheck, query: 'security' },
+  { label: 'FRONTEND', icon: Monitor, slug: 'frontend' },
+  { label: 'BACKEND', icon: Server, slug: 'backend' },
+  { label: 'FULL STACK', icon: Layers, slug: 'full stack' },
+  { label: 'DEVOPS', icon: Settings, slug: 'devops' },
+  { label: 'DATA/AI', icon: Brain, slug: 'data/ai' },
+  { label: 'DESIGNER', icon: Palette, slug: 'designer' },
+  { label: 'QA/TESTING', icon: TestTube2, slug: 'qa/testing' },
+  { label: 'SECURITY', icon: ShieldCheck, slug: 'security' },
 ];
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+
+  const handleRoleClick = (slug: string) => {
+    const isActive = selectedRole === slug;
+    setSelectedRole(isActive ? null : slug);
+    navigate(`/browse?category=${encodeURIComponent(slug)}`);
+  };
   const navigate = useNavigate();
   const { data: featuredSkills } = useSkills({ perPage: 6, sort: 'newest' });
 
@@ -119,14 +125,11 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {ROLES.map((role) => {
-              const isActive = selectedRole === role.query;
+              const isActive = selectedRole === role.slug;
               return (
                 <button
                   key={role.label}
-                  onClick={() => {
-                    setSelectedRole(isActive ? null : role.query);
-                    navigate(`/browse?q=${encodeURIComponent(role.query)}`);
-                  }}
+                  onClick={() => handleRoleClick(role.slug)}
                   className={`group flex flex-col items-center gap-3 px-4 py-6 rounded-xl border-2 transition-all duration-200 ${
                     isActive
                       ? 'bg-[#1B3A6B] border-[#1B3A6B] text-white shadow-lg shadow-[#1B3A6B]/20'
