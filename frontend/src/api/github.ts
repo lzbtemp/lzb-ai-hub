@@ -48,8 +48,9 @@ function deriveCategory(skillName: string): string {
   if (name.includes('security') || name.includes('scan') || name.includes('vuln')) return 'Security';
   if (name.includes('logging') || name.includes('deploy') || name.includes('docker') || name.includes('ci')) return 'DevOps';
   if (name.includes('data') || name.includes('ml') || name.includes('ai')) return 'Data/AI';
-  if (name.includes('react') || name.includes('vue') || name.includes('angular') || name.includes('frontend')) return 'Frontend';
+  if (name.includes('react') || name.includes('vue') || name.includes('angular') || name.includes('frontend') || name.includes('accessibility')) return 'Frontend';
   if (name.includes('api') || name.includes('server') || name.includes('backend') || name.includes('database')) return 'Backend';
+  if (name.includes('fullstack') || name.includes('scaffold') || name.includes('review')) return 'Full Stack';
   return 'Full Stack';
 }
 
