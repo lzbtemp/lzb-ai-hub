@@ -1,0 +1,126 @@
+import type { McpServer } from '../types';
+
+const mcpServers: McpServer[] = [
+  {
+    id: 'postgresql-mcp',
+    name: 'postgresql-mcp',
+    slug: 'postgresql-mcp',
+    description: 'Query and manage PostgreSQL databases with natural language',
+    category: 'Data/AI',
+    owner: 'Data Engineering',
+    version: '1.0.0',
+    capabilities: [
+      'Execute SQL queries via natural language',
+      'Inspect table schemas and relationships',
+      'Generate and run migrations',
+      'Monitor query performance',
+    ],
+    useCases: [
+      'Ad-hoc data exploration without writing SQL',
+      'Automated database health checks',
+      'Schema documentation generation',
+    ],
+  },
+  {
+    id: 'playwright-mcp',
+    name: 'playwright-mcp',
+    slug: 'playwright-mcp',
+    description: 'Browser automation and web interaction for AI agents',
+    category: 'QA/Testing',
+    owner: 'Platform Team',
+    version: '1.0.0',
+    capabilities: [
+      'Open web pages and navigate sites',
+      'Interact with UI elements (click, type, select)',
+      'Extract text and data from web pages',
+      'Take screenshots and visual snapshots',
+    ],
+    useCases: [
+      'Automate end-to-end testing workflows',
+      'Scrape and aggregate website data',
+      'Validate UI behavior across browsers',
+    ],
+  },
+  {
+    id: 'github-mcp',
+    name: 'github-mcp',
+    slug: 'github-mcp',
+    description: 'Interact with GitHub repositories, issues, and pull requests',
+    category: 'DevOps',
+    owner: 'Platform Team',
+    version: '1.0.0',
+    capabilities: [
+      'Create and manage issues and pull requests',
+      'Search repositories and code',
+      'Review and comment on PRs',
+      'Manage branch protections and workflows',
+    ],
+    useCases: [
+      'Automate PR review triage',
+      'Bulk issue management across repos',
+      'Release automation and changelog generation',
+    ],
+  },
+  {
+    id: 's3-mcp',
+    name: 's3-mcp',
+    slug: 's3-mcp',
+    description: 'Manage AWS S3 buckets, objects, and permissions',
+    category: 'Backend',
+    owner: 'Cloud Engineering',
+    version: '1.0.0',
+    capabilities: [
+      'List, upload, and download S3 objects',
+      'Manage bucket policies and ACLs',
+      'Generate pre-signed URLs',
+      'Monitor storage usage and costs',
+    ],
+    useCases: [
+      'Automated file backup and archival',
+      'Asset management for deployments',
+      'Cost analysis and storage optimization',
+    ],
+  },
+  {
+    id: 'ldap-mcp',
+    name: 'ldap-mcp',
+    slug: 'ldap-mcp',
+    description: 'Query and manage LDAP/Active Directory for identity operations',
+    category: 'Security',
+    owner: 'Identity Team',
+    version: '1.0.0',
+    capabilities: [
+      'Search users, groups, and OUs',
+      'Validate credentials and group membership',
+      'Audit access permissions',
+      'Sync directory attributes',
+    ],
+    useCases: [
+      'Automate user provisioning workflows',
+      'Access review and compliance audits',
+      'Group membership reconciliation',
+    ],
+  },
+  {
+    id: 'slack-mcp',
+    name: 'slack-mcp',
+    slug: 'slack-mcp',
+    description: 'Send messages, manage channels, and search Slack workspaces',
+    category: 'DevOps',
+    owner: 'Platform Team',
+    version: '1.0.0',
+    capabilities: [
+      'Send and schedule messages',
+      'Create and manage channels',
+      'Search message history',
+      'Manage user notifications',
+    ],
+    useCases: [
+      'Automated incident notifications',
+      'Deployment status updates',
+      'Team onboarding workflows',
+    ],
+  },
+];
+
+export default mcpServers;

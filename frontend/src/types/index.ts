@@ -64,3 +64,17 @@ export interface PaginatedResponse<T> {
   total: number;
   total_pages: number;
 }
+
+// ── MCP Servers ──────────────────────────────────────────────
+
+export interface McpServer {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  category: string;
+  owner: string;
+  version?: string;
+  capabilities?: string[];
+  useCases?: string[];
+}

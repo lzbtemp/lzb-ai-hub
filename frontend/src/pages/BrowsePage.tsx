@@ -1,13 +1,16 @@
+import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Blocks, Server, Wrench } from 'lucide-react';
 import { useSkills } from '../hooks/useSkills';
 import { useSearch } from '../hooks/useSearch';
 import SkillGrid from '../components/skills/SkillGrid';
+import McpGrid from '../components/mcp/McpGrid';
 import Pagination from '../components/common/Pagination';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import SearchBar from '../components/search/SearchBar';
 import FilterPanel from '../components/search/FilterPanel';
 import SortDropdown from '../components/search/SortDropdown';
+import mcpServers from '../data/mcp-servers';
 
 const TABS = [
   { id: 'skills', label: 'Skills', icon: Blocks },
@@ -35,6 +38,7 @@ export default function BrowsePage() {
     setSearchParams(params);
   };
 
+  // ── Skills data ──
   const skillsQuery = useSkills({
     page,
     category: category || undefined,
@@ -51,14 +55,44 @@ export default function BrowsePage() {
   const activeQuery = isSearching ? searchQuery : skillsQuery;
   const { data, isLoading, error } = activeQuery;
 
+  // ── MCP data (static, client-side filter/search) ──
+  const filteredMcpServers = useMemo(() => {
+    let results = mcpServers;
+    if (category) {
+      results = results.filter((s) => s.category.toLowerCase() === category.toLowerCase());
+    }
+    if (query) {
+      const q = query.toLowerCase();
+      results = results.filter(
+        (s) =>
+          s.name.toLowerCase().includes(q) ||
+          s.description.toLowerCase().includes(q) ||
+          s.category.toLowerCase().includes(q) ||
+          s.owner.toLowerCase().includes(q),
+      );
+    }
+    if (sort === 'name') {
+      results = [...results].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return results;
+  }, [category, query, sort]);
+
+  // Subtitle counts
+  const subtitle =
+    activeTab === 'skills' && data
+      ? `${data.total} skill${data.total !== 1 ? 's' : ''} available`
+      : activeTab === 'mcp-servers'
+        ? `${filteredMcpServers.length} MCP server${filteredMcpServers.length !== 1 ? 's' : ''} available`
+        : null;
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Editorial header */}
       <div className="mb-8 animate-fade-in-up">
         <h1 className="text-4xl lg:text-5xl font-bold text-[#1B3A6B] tracking-tight mb-2">Browse</h1>
-        {activeTab === 'skills' && data && (
+        {subtitle && (
           <p className="text-sm text-[#2C2C2C]/35 font-light">
-            {data.total} skill{data.total !== 1 ? 's' : ''} available
+            {subtitle}
             {category && <span className="text-[#1B3A6B]/60 ml-1">in selected category</span>}
           </p>
         )}
@@ -71,7 +105,7 @@ export default function BrowsePage() {
           return (
             <button
               key={tab.id}
-              onClick={() => updateParams({ tab: tab.id, page: '1', category: '' })}
+              onClick={() => updateParams({ tab: tab.id, page: '1', category: '', q: '' })}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                 isActive
                   ? 'bg-white text-[#1B3A6B] shadow-sm'
@@ -88,7 +122,6 @@ export default function BrowsePage() {
       {/* Skills tab */}
       {activeTab === 'skills' && (
         <div className="flex gap-10">
-          {/* Sidebar */}
           <aside className="hidden lg:block w-60 shrink-0">
             <div className="bg-gradient-to-b from-white to-[#FAF8F5]/80 rounded-2xl border border-gray-100 p-5 sticky top-24">
               <FilterPanel
@@ -98,13 +131,13 @@ export default function BrowsePage() {
             </div>
           </aside>
 
-          {/* Main content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-8">
               <div className="flex-1">
                 <SearchBar
                   value={query}
                   onChange={(q) => updateParams({ q })}
+                  placeholder="Search skills..."
                 />
               </div>
               {!isSearching && (
@@ -115,7 +148,6 @@ export default function BrowsePage() {
               )}
             </div>
 
-            {/* Mobile category filter */}
             <div className="lg:hidden mb-4">
               <select
                 value={category}
@@ -148,19 +180,47 @@ export default function BrowsePage() {
         </div>
       )}
 
-      {/* MCP Servers tab — Coming Soon */}
+      {/* MCP Servers tab */}
       {activeTab === 'mcp-servers' && (
-        <div className="flex flex-col items-center justify-center py-24 animate-fade-in-up">
-          <div className="w-16 h-16 rounded-2xl bg-[#1B3A6B]/5 flex items-center justify-center mb-6">
-            <Server className="w-8 h-8 text-[#1B3A6B]/40" />
+        <div className="flex gap-10">
+          <aside className="hidden lg:block w-60 shrink-0">
+            <div className="bg-gradient-to-b from-white to-[#FAF8F5]/80 rounded-2xl border border-gray-100 p-5 sticky top-24">
+              <FilterPanel
+                selectedCategory={category}
+                onCategoryChange={(slug) => updateParams({ category: slug })}
+              />
+            </div>
+          </aside>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="flex-1">
+                <SearchBar
+                  value={query}
+                  onChange={(q) => updateParams({ q })}
+                  placeholder="Search MCP servers..."
+                />
+              </div>
+              {!isSearching && (
+                <SortDropdown
+                  value={sort}
+                  onChange={(s) => updateParams({ sort: s })}
+                />
+              )}
+            </div>
+
+            <div className="lg:hidden mb-4">
+              <select
+                value={category}
+                onChange={(e) => updateParams({ category: e.target.value })}
+                className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl text-sm shadow-sm"
+              >
+                <option value="">All Categories</option>
+              </select>
+            </div>
+
+            <McpGrid servers={filteredMcpServers} />
           </div>
-          <h2 className="text-2xl font-bold text-[#1B3A6B] mb-3">MCP Servers</h2>
-          <p className="text-sm text-[#2C2C2C]/40 max-w-md text-center mb-6">
-            Browse and install Model Context Protocol servers that extend your AI agents with external data sources, APIs, and integrations.
-          </p>
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#8FAF8A]/10 text-[#8FAF8A] text-xs font-bold uppercase tracking-wider">
-            Coming Soon
-          </span>
         </div>
       )}
 
