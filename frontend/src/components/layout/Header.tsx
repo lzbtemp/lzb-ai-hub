@@ -24,8 +24,11 @@ export default function Header() {
                 loop
                 loopDelay={4}
               >
-                Agent Skills Hub
+                AI Hub
               </TextRoll>
+              <span className="block text-[10px] font-medium text-[#1B3A6B]/50 tracking-[0.12em] uppercase">
+                Discover · Build · Automate with AI
+              </span>
             </span>
           </Link>
 

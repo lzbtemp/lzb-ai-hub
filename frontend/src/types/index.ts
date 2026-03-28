@@ -64,3 +64,42 @@ export interface PaginatedResponse<T> {
   total: number;
   total_pages: number;
 }
+
+// ── MCP Servers ──────────────────────────────────────────────
+
+export interface McpTool {
+  name: string;
+  description: string;
+}
+
+export interface McpConfig {
+  command: string;
+  args: string[];
+  env?: Record<string, string>;
+}
+
+// Flattened tool for the Tools catalog (derived from McpServer.tools)
+export interface FlatTool {
+  name: string;
+  description: string;
+  serverName: string;
+  serverSlug: string;
+  category: string;
+  owner: string;
+}
+
+export interface McpServer {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  category: string;
+  owner: string;
+  version?: string;
+  capabilities?: string[];
+  useCases?: string[];
+  tools?: McpTool[];
+  source?: string;
+  npmPackage?: string;
+  config?: McpConfig;
+}

@@ -1,11 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Search, ArrowRight, Server, Layers, Monitor,
-  Brain, Palette, Settings, TestTube2, ShieldCheck
+  Brain, Palette, Settings, TestTube2, ShieldCheck, Wrench
 } from 'lucide-react';
 import { useSkills } from '../hooks/useSkills';
 import SkillGrid from '../components/skills/SkillGrid';
+import McpGrid from '../components/mcp/McpGrid';
+import ToolGrid from '../components/tools/ToolGrid';
+import mcpServers from '../data/mcp-servers';
+import allTools from '../data/tools';
 import { SplineScene } from '@/components/ui/splite';
 import { Spotlight } from '@/components/ui/spotlight';
 import { Typewriter } from '@/components/ui/typewriter-text';
@@ -34,6 +38,9 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { data: featuredSkills } = useSkills({ perPage: 6, sort: 'newest' });
 
+  const featuredMcp = useMemo(() => mcpServers.slice(0, 6), []);
+  const popularTools = useMemo(() => allTools.slice(0, 6), []);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -59,7 +66,7 @@ export default function HomePage() {
             <div className="flex-1 py-10 lg:py-14 z-10 text-center lg:text-left">
               <div className="mb-4 animate-fade-in-up min-h-[28px]">
                 <Typewriter
-                  text="Reusable capabilities for AI agents. Install with a single command and enhance your agents with procedural knowledge."
+                  text="AI skills, MCP servers, and tools — all in one place. Install with a single command and supercharge your AI agents."
                   speed={50}
                   loop={false}
                   cursor="_"
@@ -67,7 +74,7 @@ export default function HomePage() {
                 />
               </div>
               <div className="mb-6 animate-fade-in-up flex items-center gap-2 justify-center lg:justify-start" style={{ animationDelay: '0.08s' }}>
-                <span className="text-sm text-white font-bold">Skills for</span>
+                <span className="text-sm text-white font-bold">AI resources for</span>
                 <TextRotate
                   texts={[
                     "Code Generation",
@@ -87,7 +94,7 @@ export default function HomePage() {
               </div>
               <div className="inline-block text-left">
                 <p className="text-sm text-white/60 mb-2 animate-fade-in-up whitespace-nowrap" style={{ animationDelay: '0.12s' }}>
-                  Discover, browse, and install AI agent skills built by your team.
+                  Discover, browse, and install AI skills, MCP servers, and tools.
                 </p>
 
                 {/* Glass search bar — matches text width */}
@@ -97,7 +104,7 @@ export default function HomePage() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search skills..."
+                    placeholder="Search skills, servers, tools..."
                     className="w-full pl-11 pr-4 py-3 rounded-xl text-white bg-white/[0.08] backdrop-blur-md border border-white/[0.12] shadow-2xl placeholder-white/30 focus:outline-none focus:bg-white/[0.12] focus:border-white/[0.2] transition-all text-sm"
                   />
                 </form>
@@ -146,22 +153,62 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Featured Skills */}
+        {/* Latest Skills */}
         {featuredSkills && featuredSkills.data.length > 0 && (
-          <section className="animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
+          <section className="mb-16 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
             <div className="flex items-center justify-between mb-10">
               <div className="flex items-center gap-4">
                 <h2 className="text-3xl font-bold text-[#1B3A6B] tracking-tight">Latest Skills</h2>
                 <div className="flex-1 h-px bg-gradient-to-r from-[#1B3A6B]/15 to-transparent" />
               </div>
               <Link
-                to="/browse"
+                to="/browse?tab=skills"
                 className="group inline-flex items-center gap-2 text-sm font-medium text-[#C0392B] hover:text-[#C0392B]/80 transition-colors"
               >
                 View all <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
             <SkillGrid skills={featuredSkills.data} />
+          </section>
+        )}
+
+        {/* Featured MCP Servers */}
+        {featuredMcp.length > 0 && (
+          <section className="mb-16 animate-fade-in-up" style={{ animationDelay: '0.35s' }}>
+            <div className="flex items-center justify-between mb-10">
+              <div className="flex items-center gap-4">
+                <Server className="w-5 h-5 text-[#8FAF8A]" />
+                <h2 className="text-3xl font-bold text-[#1B3A6B] tracking-tight">Featured MCP Servers</h2>
+                <div className="flex-1 h-px bg-gradient-to-r from-[#8FAF8A]/25 to-transparent" />
+              </div>
+              <Link
+                to="/browse?tab=mcp-servers"
+                className="group inline-flex items-center gap-2 text-sm font-medium text-[#C0392B] hover:text-[#C0392B]/80 transition-colors"
+              >
+                View all <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
+            <McpGrid servers={featuredMcp} />
+          </section>
+        )}
+
+        {/* Popular Tools */}
+        {popularTools.length > 0 && (
+          <section className="animate-fade-in-up" style={{ animationDelay: '0.45s' }}>
+            <div className="flex items-center justify-between mb-10">
+              <div className="flex items-center gap-4">
+                <Wrench className="w-5 h-5 text-[#C0392B]/60" />
+                <h2 className="text-3xl font-bold text-[#1B3A6B] tracking-tight">Popular Tools</h2>
+                <div className="flex-1 h-px bg-gradient-to-r from-[#C0392B]/15 to-transparent" />
+              </div>
+              <Link
+                to="/browse?tab=tools"
+                className="group inline-flex items-center gap-2 text-sm font-medium text-[#C0392B] hover:text-[#C0392B]/80 transition-colors"
+              >
+                View all <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
+            <ToolGrid tools={popularTools} />
           </section>
         )}
       </div>

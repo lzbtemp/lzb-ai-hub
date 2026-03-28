@@ -5,6 +5,7 @@ import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
 import BrowsePage from './pages/BrowsePage';
 import SkillDetailPage from './pages/SkillDetailPage';
+import McpDetailPage from './pages/McpDetailPage';
 import MarketplacePage from './pages/MarketplacePage';
 import MarketplaceDetailPage from './pages/MarketplaceDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -31,6 +32,7 @@ export default function App() {
               <Route path="/marketplace" element={<MarketplacePage />} />
               <Route path="/marketplace/:org/:repo/:slug" element={<MarketplaceDetailPage />} />
               <Route path="/skills/:slug" element={<SkillDetailPage />} />
+              <Route path="/mcp/:slug" element={<McpDetailPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
