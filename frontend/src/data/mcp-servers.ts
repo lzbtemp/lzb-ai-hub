@@ -25,6 +25,10 @@ const mcpServers: McpServer[] = [
     tools: [
       { name: 'query', description: 'Execute a read-only SQL query against the connected PostgreSQL database and return structured results' },
     ],
+    config: {
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-postgres', 'postgresql://user:password@localhost:5432/mydb'],
+    },
   },
   {
     id: 'playwright-mcp',
@@ -72,6 +76,10 @@ const mcpServers: McpServer[] = [
       { name: 'start_codegen_session', description: 'Start recording a new Playwright code generation session' },
       { name: 'end_codegen_session', description: 'Stop recording and generate the Playwright test file' },
     ],
+    config: {
+      command: 'npx',
+      args: ['@playwright/mcp@latest'],
+    },
   },
   {
     id: 'github-mcp',
@@ -127,6 +135,11 @@ const mcpServers: McpServer[] = [
       { name: 'create_repository', description: 'Create a new repository' },
       { name: 'push_files', description: 'Push multiple files to a repository' },
     ],
+    config: {
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-github'],
+      env: { GITHUB_PERSONAL_ACCESS_TOKEN: '<your-token>' },
+    },
   },
   {
     id: 's3-mcp',
@@ -153,6 +166,16 @@ const mcpServers: McpServer[] = [
       { name: 'ListObjectsV2', description: 'List objects in a bucket (up to 1,000 per request) with optional prefix filter' },
       { name: 'GetObject', description: 'Retrieve an object from S3 by bucket name and key' },
     ],
+    config: {
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-aws-ow-s3-mcp'],
+      env: {
+        AWS_ACCESS_KEY_ID: '<your-access-key>',
+        AWS_SECRET_ACCESS_KEY: '<your-secret-key>',
+        AWS_REGION: 'us-east-1',
+        BUCKET_NAME: '<your-bucket>',
+      },
+    },
   },
   {
     id: 'slack-mcp',
@@ -189,6 +212,14 @@ const mcpServers: McpServer[] = [
       { name: 'update_canvas', description: 'Update an existing canvas with new content' },
       { name: 'read_canvas', description: 'Read and export canvas content as markdown' },
     ],
+    config: {
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-slack'],
+      env: {
+        SLACK_BOT_TOKEN: 'xoxb-your-bot-token',
+        SLACK_TEAM_ID: 'T01234567',
+      },
+    },
   },
   {
     id: 'ldap-mcp',
@@ -230,6 +261,16 @@ const mcpServers: McpServer[] = [
       { name: 'audit_admin_accounts', description: 'Audit administrative accounts for compliance' },
       { name: 'test_connection', description: 'Test connectivity to the LDAP server' },
     ],
+    config: {
+      command: 'python',
+      args: ['-m', 'koppla.server'],
+      env: {
+        AD_SERVER: 'ldap://your-domain-controller:389',
+        AD_USER: 'domain\\username',
+        AD_PASSWORD: '<your-password>',
+        BASE_DN: 'DC=example,DC=com',
+      },
+    },
   },
 ];
 

@@ -72,6 +72,12 @@ export interface McpTool {
   description: string;
 }
 
+export interface McpConfig {
+  command: string;
+  args: string[];
+  env?: Record<string, string>;
+}
+
 export interface McpServer {
   id: string;
   name: string;
@@ -85,4 +91,5 @@ export interface McpServer {
   tools?: McpTool[];
   source?: string;
   npmPackage?: string;
+  config?: McpConfig;
 }

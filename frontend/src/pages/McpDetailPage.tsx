@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ChevronRight, Server, Zap, Lightbulb, Wrench, ExternalLink } from 'lucide-react';
+import { ChevronRight, Server, Zap, Lightbulb, Wrench, ExternalLink, Copy, Check } from 'lucide-react';
 import mcpServers from '../data/mcp-servers';
 
 export default function McpDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const server = mcpServers.find((s) => s.slug === slug);
+  const [copied, setCopied] = useState(false);
 
   if (!server) {
     return (
@@ -16,6 +18,32 @@ export default function McpDetailPage() {
       </div>
     );
   }
+
+  // Build the JSON config that users paste into claude_desktop_config.json / .cursor/mcp.json
+  const configJson = server.config
+    ? JSON.stringify(
+        {
+          mcpServers: {
+            [server.slug]: {
+              command: server.config.command,
+              args: server.config.args,
+              ...(server.config.env && Object.keys(server.config.env).length > 0
+                ? { env: server.config.env }
+                : {}),
+            },
+          },
+        },
+        null,
+        2,
+      )
+    : null;
+
+  const handleCopy = async () => {
+    if (!configJson) return;
+    await navigator.clipboard.writeText(configJson);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="animate-fade-in">
@@ -135,9 +163,43 @@ export default function McpDetailPage() {
             )}
           </div>
 
-          {/* Sidebar — info card */}
+          {/* Sidebar */}
           <aside className="w-full lg:w-72 shrink-0">
-            <div className="sticky top-24">
+            <div className="sticky top-24 space-y-4">
+              {/* Configuration JSON */}
+              {configJson && (
+                <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold text-[#2C2C2C]/60 uppercase tracking-wider">Configuration</h3>
+                    <button
+                      onClick={handleCopy}
+                      className="inline-flex items-center gap-1.5 text-xs text-[#2C2C2C]/40 hover:text-[#1B3A6B] transition-colors"
+                    >
+                      {copied ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-[#8FAF8A]" />
+                          <span className="text-[#8FAF8A]">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          Copy
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-[#2C2C2C]/30 mb-3">
+                    Add to your <code className="bg-[#FAF8F5] px-1 py-0.5 rounded">claude_desktop_config.json</code> or <code className="bg-[#FAF8F5] px-1 py-0.5 rounded">.cursor/mcp.json</code>
+                  </p>
+                  <div className="relative">
+                    <pre className="bg-[#1B3A6B] text-white/90 text-[11px] leading-relaxed font-mono p-4 rounded-xl overflow-x-auto scrollbar-thin">
+                      {configJson}
+                    </pre>
+                  </div>
+                </div>
+              )}
+
+              {/* Details card */}
               <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
                 <h3 className="text-sm font-bold text-[#2C2C2C]/60 uppercase tracking-wider mb-4">Details</h3>
                 <dl className="space-y-4 text-sm">
