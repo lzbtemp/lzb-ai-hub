@@ -59,7 +59,7 @@ export default function HomePage() {
             <div className="flex-1 py-10 lg:py-14 z-10 text-center lg:text-left">
               <div className="mb-4 animate-fade-in-up min-h-[28px]">
                 <Typewriter
-                  text="Reusable capabilities for AI agents. Install with a single command and enhance your agents with procedural knowledge."
+                  text="AI skills, MCP servers, and tools — all in one place. Install with a single command and supercharge your AI agents."
                   speed={50}
                   loop={false}
                   cursor="_"
@@ -67,7 +67,7 @@ export default function HomePage() {
                 />
               </div>
               <div className="mb-6 animate-fade-in-up flex items-center gap-2 justify-center lg:justify-start" style={{ animationDelay: '0.08s' }}>
-                <span className="text-sm text-white font-bold">Skills for</span>
+                <span className="text-sm text-white font-bold">AI resources for</span>
                 <TextRotate
                   texts={[
                     "Code Generation",
@@ -87,7 +87,7 @@ export default function HomePage() {
               </div>
               <div className="inline-block text-left">
                 <p className="text-sm text-white/60 mb-2 animate-fade-in-up whitespace-nowrap" style={{ animationDelay: '0.12s' }}>
-                  Discover, browse, and install AI agent skills built by your team.
+                  Discover, browse, and install AI skills, MCP servers, and tools.
                 </p>
 
                 {/* Glass search bar — matches text width */}
@@ -97,7 +97,7 @@ export default function HomePage() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search skills..."
+                    placeholder="Search skills, servers, tools..."
                     className="w-full pl-11 pr-4 py-3 rounded-xl text-white bg-white/[0.08] backdrop-blur-md border border-white/[0.12] shadow-2xl placeholder-white/30 focus:outline-none focus:bg-white/[0.12] focus:border-white/[0.2] transition-all text-sm"
                   />
                 </form>
@@ -151,7 +151,7 @@ export default function HomePage() {
           <section className="animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
             <div className="flex items-center justify-between mb-10">
               <div className="flex items-center gap-4">
-                <h2 className="text-3xl font-bold text-[#1B3A6B] tracking-tight">Latest Skills</h2>
+                <h2 className="text-3xl font-bold text-[#1B3A6B] tracking-tight">Latest</h2>
                 <div className="flex-1 h-px bg-gradient-to-r from-[#1B3A6B]/15 to-transparent" />
               </div>
               <Link
