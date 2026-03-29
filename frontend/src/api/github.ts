@@ -30,10 +30,19 @@ function parseFrontmatter(markdown: string): { meta: SkillFrontmatter; content: 
   const content = match[2];
 
   const name = (frontmatter.match(/^name:\s*(.+)$/m) || [])[1]?.trim().replace(/^["']|["']$/g, '') || '';
-  const descMatch = frontmatter.match(/^description:\s*["']?([\s\S]*?)["']?\s*$/m);
-  const description = descMatch ? descMatch[1].replace(/\s+/g, ' ').trim() : '';
+
+  // Handle YAML multiline description (>, |, or inline)
+  let description = '';
+  const descBlockMatch = frontmatter.match(/^description:\s*[>|]\s*\n((?:[ \t]+.+\n?)*)/m);
+  if (descBlockMatch) {
+    description = descBlockMatch[1].replace(/^\s+/gm, '').replace(/\s+/g, ' ').trim();
+  } else {
+    const descInlineMatch = frontmatter.match(/^description:\s*["']?(.*?)["']?\s*$/m);
+    description = descInlineMatch ? descInlineMatch[1].trim() : '';
+  }
+
   const version = (frontmatter.match(/^version:\s*(.+)$/m) || [])[1]?.trim() || '1.0.0';
-  const category = (frontmatter.match(/^category:\s*(.+)$/m) || [])[1]?.trim() || 'development';
+  const category = (frontmatter.match(/^category:\s*(.+)$/m) || [])[1]?.trim() || '';
   const tagsMatch = frontmatter.match(/^tags:\s*\[(.+)\]$/m);
   const tags = tagsMatch ? tagsMatch[1].split(',').map(t => t.trim().replace(/^["']|["']$/g, '')) : [];
 
@@ -110,8 +119,8 @@ const CATEGORY_ICONS: Record<string, string> = {
 
 function toSkill(skillName: string, markdown: string, index: number): GitHubSkill {
   const { meta } = parseFrontmatter(markdown);
-  const categoryName = deriveCategory(skillName);
-  const tags = deriveTags(skillName, meta.description);
+  const categoryName = meta.category && CATEGORY_ICONS[meta.category] ? meta.category : deriveCategory(skillName);
+  const tags = meta.tags && meta.tags.length > 0 ? meta.tags : deriveTags(skillName, meta.description);
 
   return {
     id: index + 1,
@@ -142,7 +151,7 @@ function toSkill(skillName: string, markdown: string, index: number): GitHubSkil
       role: 'admin',
       created_at: new Date().toISOString(),
     },
-    tags: tags.map((t, i) => ({ id: i + 1, name: t, slug: t.toLowerCase().replace(/\s+/g, '-') })),
+    tags: [...new Set(tags)].map((t, i) => ({ id: i + 1, name: t, slug: t.toLowerCase().replace(/\s+/g, '-') })),
   };
 }
 
