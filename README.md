@@ -23,7 +23,7 @@ Internal portal for discovering and installing AI skills, MCP servers, and tools
 
 ## Features
 
-- **Skills Catalog** — Browse 29+ AI agent skills with search, category filters, and detail pages. Skills are fetched live from the `LZBRetail/lazboy-agent-skills` GitHub repo.
+- **Skills Catalog** — Browse 29+ AI agent skills with search, category filters, and detail pages. Skills are fetched live from the `lzbtemp/lazboy-agent-skills` GitHub repo.
 - **MCP Servers** — 21 curated MCP server entries with config JSON copy, tool listings, and detail pages.
 - **Tools Directory** — 186+ searchable tools across all MCP servers with category filtering.
 - **Marketplace** — Discover and install community skills from external providers (Anthropic, Vercel Labs).
@@ -129,7 +129,7 @@ lazboy-ai-hub/
                       └──────────────────┘
 ```
 
-- **Skills** are fetched live from `LZBRetail/lazboy-agent-skills` on GitHub, parsed from SKILL.md frontmatter, and cached in-memory + React Query.
+- **Skills** are fetched live from `lzbtemp/lazboy-agent-skills` on GitHub, parsed from SKILL.md frontmatter, and cached in-memory + React Query.
 - **MCP Servers & Tools** are curated static data bundled into the build.
 - **Marketplace** fetches skills from external GitHub repos (Anthropic, Vercel Labs).
 
